@@ -5,6 +5,8 @@ import { Award, BookOpen, Clock3, ExternalLink, ShieldCheck, Star } from "lucide
 import { prisma } from "@/lib/prisma";
 import { formatUrl, getPricingLabel, splitTextarea } from "@/lib/certificate-utils";
 
+export const dynamic = "force-dynamic";
+
 type CertificateDetailPageProps = {
   params: Promise<{ slug: string }>;
 };

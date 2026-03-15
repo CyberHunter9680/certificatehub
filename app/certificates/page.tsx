@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import CertificatesClient from "./CertificatesClient";
 
+export const dynamic = "force-dynamic";
+
 const pageTitle = "Free Cyber Security Certification 2026 | Certificate Directory";
 const pageDescription =
   "Browse certificate opportunities with full details including platform, duration, course content, benefits, and free or paid status.";

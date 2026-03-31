@@ -70,6 +70,8 @@ export default function RootLayout({
         </PublicOnly>
         <Analytics />
       </body>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5278574901328003"
+     crossOrigin="anonymous"></script>
     </html>
   );
 }

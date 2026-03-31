@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, MapPin, Phone, Mail, Send } from "lucide-react";
+import { Twitter, Instagram, Linkedin, MapPin, Phone, Mail, Send } from "lucide-react";
 
 export default function Footer() {
   const pathname = usePathname();
@@ -40,6 +40,7 @@ export default function Footer() {
             <div className="flex flex-col gap-3">
               <Link href="/" className="text-gray-400 hover:text-purple-400 hover:translate-x-1 transition-all text-sm w-fit">Home</Link>
               <Link href="/about" className="text-gray-400 hover:text-purple-400 hover:translate-x-1 transition-all text-sm w-fit">About Us</Link>
+              <Link href="/blog" className="text-gray-400 hover:text-purple-400 hover:translate-x-1 transition-all text-sm w-fit">Blog</Link>
               <Link href="/contact" className="text-gray-400 hover:text-purple-400 hover:translate-x-1 transition-all text-sm w-fit">Contact</Link>
               <Link href="/certificates" className="text-gray-400 hover:text-purple-400 hover:translate-x-1 transition-all text-sm w-fit">All Certificates</Link>
               <Link href="/disclaimer" className="text-gray-400 hover:text-purple-400 hover:translate-x-1 transition-all text-sm w-fit">Disclaimer</Link>

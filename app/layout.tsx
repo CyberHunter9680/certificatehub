@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import AdSlot from "./components/AdSlot";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ClientEnhancements from "./components/ClientEnhancements";
+import PublicOnly from "./components/PublicOnly";
 import { Analytics } from "@vercel/analytics/next"
 
 const poppins = Poppins({
@@ -47,11 +49,25 @@ export default function RootLayout({
         className={`${poppins.variable} antialiased bg-[#0e0e1a] text-white min-h-screen flex flex-col`}
       >
         <Navbar />
-        <ClientEnhancements />
-        <main className="flex-1 pt-20">
+        <PublicOnly>
+          <div className="px-4 pb-4 pt-24 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl">
+              <AdSlot placement="HEADER" />
+            </div>
+          </div>
+          <ClientEnhancements />
+        </PublicOnly>
+        <main className="flex-1">
           {children}
         </main>
-        <Footer />
+        <PublicOnly>
+          <div className="px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl">
+              <AdSlot placement="FOOTER" />
+            </div>
+          </div>
+          <Footer />
+        </PublicOnly>
         <Analytics />
       </body>
     </html>

@@ -101,6 +101,7 @@ export default function Navbar() {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-6">
               <Link href="/" className={`text-sm font-medium transition-colors hover:text-purple-400 ${pathname === '/' ? 'text-purple-400' : 'text-gray-300'}`}>Home</Link>
+              <Link href="/blog" className={`text-sm font-medium transition-colors hover:text-purple-400 ${pathname.startsWith('/blog') ? 'text-purple-400' : 'text-gray-300'}`}>Blog</Link>
               <Link href="/about" className={`text-sm font-medium transition-colors hover:text-purple-400 ${pathname === '/about' ? 'text-purple-400' : 'text-gray-300'}`}>About</Link>
               <Link href="/contact" className={`text-sm font-medium transition-colors hover:text-purple-400 ${pathname === '/contact' ? 'text-purple-400' : 'text-gray-300'}`}>Contact</Link>
               <Link href="/disclaimer" className={`text-sm font-medium transition-colors hover:text-purple-400 ${pathname === '/disclaimer' ? 'text-purple-400' : 'text-gray-300'}`}>Disclaimer</Link>
@@ -147,6 +148,7 @@ export default function Navbar() {
           >
             <div className="flex flex-col gap-4">
               <Link href="/" className="text-gray-200 p-2 hover:bg-white/5 rounded" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/blog" className="text-gray-200 p-2 hover:bg-white/5 rounded" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
               <Link href="/about" className="text-gray-200 p-2 hover:bg-white/5 rounded" onClick={() => setMobileMenuOpen(false)}>About</Link>
               <Link href="/contact" className="text-gray-200 p-2 hover:bg-white/5 rounded" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
               <Link href="/disclaimer" className="text-gray-200 p-2 hover:bg-white/5 rounded" onClick={() => setMobileMenuOpen(false)}>Disclaimer</Link>

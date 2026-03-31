@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Award, BookOpen, Clock3, ExternalLink, ShieldCheck, Star } from "lucide-react";
+import AdSlot from "@/app/components/AdSlot";
 import { prisma } from "@/lib/prisma";
 import { formatUrl, getPricingLabel, splitTextarea } from "@/lib/certificate-utils";
 
@@ -13,7 +14,10 @@ type CertificateDetailPageProps = {
 
 export async function generateMetadata({ params }: CertificateDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const certificate = await prisma.certificate.findUnique({ where: { slug } });
+  const certificate = await prisma.certificate.findUnique({
+    where: { slug },
+    include: { categoryRecord: true },
+  });
 
   if (!certificate) {
     return {
@@ -46,7 +50,10 @@ export async function generateMetadata({ params }: CertificateDetailPageProps): 
 
 export default async function CertificateDetailPage({ params }: CertificateDetailPageProps) {
   const { slug } = await params;
-  const certificate = await prisma.certificate.findUnique({ where: { slug } });
+  const certificate = await prisma.certificate.findUnique({
+    where: { slug },
+    include: { categoryRecord: true },
+  });
 
   if (!certificate) {
     notFound();
@@ -54,13 +61,16 @@ export default async function CertificateDetailPage({ params }: CertificateDetai
 
   const courseContent = splitTextarea(certificate.courseContent);
   const benefits = splitTextarea(certificate.benefits);
-  const relatedFilters = certificate.category
-    ? [{ category: certificate.category }, { platform: certificate.platform }]
+  const relatedFilters = certificate.categoryId
+    ? [{ categoryId: certificate.categoryId }, { platform: certificate.platform }]
     : [{ platform: certificate.platform }];
   const relatedCertificates = await prisma.certificate.findMany({
     where: {
       id: { not: certificate.id },
       OR: relatedFilters,
+    },
+    include: {
+      categoryRecord: true,
     },
     orderBy: { createdAt: "desc" },
     take: 3,
@@ -73,6 +83,9 @@ export default async function CertificateDetailPage({ params }: CertificateDetai
             id: {
               notIn: [certificate.id, ...relatedCertificates.map((item) => item.id)],
             },
+          },
+          include: {
+            categoryRecord: true,
           },
           orderBy: { createdAt: "desc" },
           take: 3 - relatedCertificates.length,
@@ -96,8 +109,8 @@ export default async function CertificateDetailPage({ params }: CertificateDetai
                 <span className="rounded-full bg-emerald-500/20 px-4 py-2 text-emerald-200">
                   {getPricingLabel(certificate.pricingType)}
                 </span>
-                {certificate.category && (
-                  <span className="rounded-full bg-blue-500/20 px-4 py-2 text-blue-200">{certificate.category}</span>
+                {(certificate.categoryRecord?.name || certificate.category) && (
+                  <span className="rounded-full bg-blue-500/20 px-4 py-2 text-blue-200">{certificate.categoryRecord?.name || certificate.category}</span>
                 )}
               </div>
 
@@ -183,10 +196,11 @@ export default async function CertificateDetailPage({ params }: CertificateDetai
                     <Award className="text-purple-300" />
                     <div>
                       <p className="text-sm text-gray-400">Best For</p>
-                      <p className="font-semibold">{certificate.category || "Professional learners"}</p>
+                      <p className="font-semibold">{certificate.categoryRecord?.name || certificate.category || "Professional learners"}</p>
                     </div>
                   </div>
                 </div>
+                <AdSlot placement="SIDEBAR" />
               </div>
             </div>
           </div>
@@ -258,6 +272,9 @@ export default async function CertificateDetailPage({ params }: CertificateDetai
                       <div className="mb-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wider">
                         <span className="rounded-full bg-purple-500/20 px-3 py-1 text-purple-200">{item.platform}</span>
                         <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200">{getPricingLabel(item.pricingType)}</span>
+                        {(item.categoryRecord?.name || item.category) && (
+                          <span className="rounded-full bg-blue-500/20 px-3 py-1 text-blue-200">{item.categoryRecord?.name || item.category}</span>
+                        )}
                       </div>
                       <h3 className="line-clamp-2 text-lg font-bold text-white">{item.title}</h3>
                       <p className="mt-3 line-clamp-3 text-sm text-gray-400">{item.description}</p>

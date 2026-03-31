@@ -7,6 +7,13 @@ export type CertificateRecord = {
   courseName: string;
   platform: string;
   category: string | null;
+  categoryId?: string | null;
+  categoryRecord?: {
+    id: string;
+    name: string;
+    slug: string;
+    description?: string | null;
+  } | null;
   duration: string | null;
   pricingType: PricingType | string;
   courseContent: string | null;
@@ -20,6 +27,12 @@ export type CertificateRecord = {
   keywords: string | null;
   createdAt?: Date | string;
   updatedAt?: Date | string;
+};
+
+export type AdRecord = {
+  id: string;
+  title: string;
+  adCode: string;
 };
 
 export function formatUrl(url?: string | null) {

@@ -88,6 +88,9 @@ async function buildCertificatePayload(data: Record<string, unknown>, currentId?
 export async function GET() {
   try {
     const certificates = await prisma.certificate.findMany({
+      include: {
+        categoryRecord: true,
+      },
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(certificates);

@@ -44,6 +44,7 @@ node_modules
 .next
 .env
 .env.local
+node_modules
 .env.production
 .env.development
 dev.db

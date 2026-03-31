@@ -7,12 +7,29 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum AdPlacement {
+  HEADER
+  SIDEBAR
+  BETWEEN_CERTIFICATES
+  FOOTER
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String
   role      String   @default("USER")
   createdAt DateTime @default(now())
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  slug         String        @unique
+  description  String?
+  certificates Certificate[] @relation("CertificateCategory")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Certificate {
@@ -22,6 +39,8 @@ model Certificate {
   courseName     String
   platform       String
   category       String?
+  categoryId     String?
+  categoryRecord Category? @relation("CertificateCategory", fields: [categoryId], references: [id], onDelete: SetNull)
   duration       String?
   pricingType    String   @default("FREE")
   courseContent  String?
@@ -36,4 +55,27 @@ model Certificate {
   issuedAt       DateTime?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model Blog {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  content         String
+  featuredImage   String?
+  metaTitle       String?
+  metaDescription String?
+  published       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Ad {
+  id        String      @id @default(cuid())
+  title     String
+  adCode    String
+  placement AdPlacement
+  active    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }

@@ -5,12 +5,27 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://certfinder.vercel.app";
-  const certificates = await prisma.certificate.findMany({
-    select: {
-      slug: true,
-      updatedAt: true,
-    },
-  });
+  const [certificates, categories, blogs] = await Promise.all([
+    prisma.certificate.findMany({
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+    prisma.category.findMany({
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+    prisma.blog.findMany({
+      where: { published: true },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+  ]);
 
   return [
     {
@@ -19,6 +34,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/certificates`,
+      lastModified: new Date(),
+    },
+    {
+      url: `${baseUrl}/blog`,
       lastModified: new Date(),
     },
     {
@@ -44,6 +63,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...certificates.map((certificate) => ({
       url: `${baseUrl}/certificates/${certificate.slug}`,
       lastModified: certificate.updatedAt,
+    })),
+    ...categories.map((category) => ({
+      url: `${baseUrl}/category/${category.slug}`,
+      lastModified: category.updatedAt,
+    })),
+    ...blogs.map((blog) => ({
+      url: `${baseUrl}/blog/${blog.slug}`,
+      lastModified: blog.updatedAt,
     })),
   ];
 }

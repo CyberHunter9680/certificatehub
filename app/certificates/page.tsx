@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { AdPlacement } from "@prisma/client";
 import CertificatesClient from "./CertificatesClient";
 
 export const dynamic = "force-dynamic";
@@ -34,9 +35,21 @@ export const metadata: Metadata = {
 };
 
 export default async function CertificatesPage() {
-  const certificates = await prisma.certificate.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const [certificates, betweenAds] = await Promise.all([
+    prisma.certificate.findMany({
+      include: {
+        categoryRecord: true,
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.ad.findMany({
+      where: {
+        placement: AdPlacement.BETWEEN_CERTIFICATES,
+        active: true,
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
 
-  return <CertificatesClient certificates={certificates} />;
+  return <CertificatesClient certificates={certificates} betweenAds={betweenAds} />;
 }

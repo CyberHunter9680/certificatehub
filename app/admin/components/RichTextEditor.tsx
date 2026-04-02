@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Bold, Italic, List, ListOrdered, Link2, Heading2 } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Bold, Heading2, Italic, Link2, List, ListOrdered } from "lucide-react";
 
 type RichTextEditorProps = {
   name: string;
@@ -31,23 +31,44 @@ function ToolbarButton({
 
 export default function RichTextEditor({ name, defaultValue = "" }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
-  const [content, setContent] = useState(defaultValue);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const syncContent = () => {
+    if (!editorRef.current || !inputRef.current) {
+      return;
+    }
+
+    inputRef.current.value = editorRef.current.innerHTML;
+  };
 
   useEffect(() => {
-    setContent(defaultValue);
+    if (!editorRef.current || !inputRef.current) {
+      return;
+    }
+
+    editorRef.current.innerHTML = defaultValue;
+    inputRef.current.value = defaultValue;
   }, [defaultValue]);
 
   const exec = (command: string, value?: string) => {
     if (!editorRef.current) return;
+
     editorRef.current.focus();
     document.execCommand(command, false, value);
-    setContent(editorRef.current.innerHTML);
+    syncContent();
   };
 
   const addLink = () => {
     const value = window.prompt("Enter URL");
     if (!value) return;
     exec("createLink", value);
+  };
+
+  const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const text = event.clipboardData.getData("text/plain");
+    document.execCommand("insertText", false, text);
+    syncContent();
   };
 
   return (
@@ -59,7 +80,7 @@ export default function RichTextEditor({ name, defaultValue = "" }: RichTextEdit
         <ToolbarButton title="Italic" onClick={() => exec("italic")}>
           <Italic size={16} />
         </ToolbarButton>
-        <ToolbarButton title="Heading" onClick={() => exec("formatBlock", "<h2>")}>
+        <ToolbarButton title="Heading" onClick={() => exec("formatBlock", "h2")}>
           <Heading2 size={16} />
         </ToolbarButton>
         <ToolbarButton title="Bulleted List" onClick={() => exec("insertUnorderedList")}>
@@ -77,12 +98,13 @@ export default function RichTextEditor({ name, defaultValue = "" }: RichTextEdit
         ref={editorRef}
         contentEditable
         suppressContentEditableWarning
-        onInput={(event) => setContent(event.currentTarget.innerHTML)}
+        onInput={syncContent}
+        onBlur={syncContent}
+        onPaste={handlePaste}
         className="min-h-[280px] w-full px-4 py-4 text-base text-white outline-none [&_h2]:mb-3 [&_h2]:mt-6 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:ml-5 [&_li]:list-disc [&_ol_li]:list-decimal [&_p]:mb-4"
-        dangerouslySetInnerHTML={{ __html: defaultValue }}
       />
 
-      <input type="hidden" name={name} value={content} />
+      <textarea ref={inputRef} name={name} defaultValue={defaultValue} className="hidden" readOnly />
     </div>
   );
 }

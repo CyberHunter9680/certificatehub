@@ -6,7 +6,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ClientEnhancements from "./components/ClientEnhancements";
 import PublicOnly from "./components/PublicOnly";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -69,6 +70,7 @@ export default function RootLayout({
           <Footer />
         </PublicOnly>
         <Analytics />
+        <SpeedInsights />
       </body>
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5278574901328003"
      crossOrigin="anonymous"></script>

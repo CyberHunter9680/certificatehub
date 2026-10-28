@@ -47,6 +47,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5278574901328003"
+          crossOrigin="anonymous"
+        ></script>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-CG3QD8Y8EJ"></script>
         <script
           dangerouslySetInnerHTML={{
@@ -85,8 +90,6 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
       </body>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5278574901328003"
-     crossOrigin="anonymous"></script>
     </html>
   );
 }

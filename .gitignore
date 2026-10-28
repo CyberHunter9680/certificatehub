@@ -47,6 +47,8 @@ node_modules
 node_modules
 .env.production
 .env.development
-dev.db
-echo *.log >> .gitignore
-echo *.err >> .gitignore
+dev.db*
+*.db
+*.db-journal
+*.log
+*.err
